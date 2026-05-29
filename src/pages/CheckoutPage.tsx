@@ -1,17 +1,92 @@
-import React, { useState } from 'react';
-import { ShoppingBag, ArrowLeft, ArrowRight, ShieldCheck, MapPin, Truck, CreditCard, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShoppingBag, ArrowLeft, ArrowRight, ShieldCheck, MapPin, Truck, CreditCard, CheckCircle2, LocateFixed } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
+
+const stateMapping: Record<string, string> = {
+  "Andaman and Nicobar Islands": "AN",
+  "Andhra Pradesh": "AP",
+  "Arunachal Pradesh": "AR",
+  "Assam": "AS",
+  "Bihar": "BR",
+  "Chandigarh": "CH",
+  "Chhattisgarh": "CT",
+  "Dadra and Nagar Haveli": "DN",
+  "Daman and Diu": "DN",
+  "Delhi": "DL",
+  "Goa": "GA",
+  "Gujarat": "GJ",
+  "Haryana": "HR",
+  "Himachal Pradesh": "HP",
+  "Jammu and Kashmir": "JK",
+  "Jharkhand": "JH",
+  "Karnataka": "KA",
+  "Kerala": "KL",
+  "Ladakh": "LA",
+  "Lakshadweep": "LD",
+  "Madhya Pradesh": "MP",
+  "Maharashtra": "MH",
+  "Manipur": "MN",
+  "Meghalaya": "ML",
+  "Mizoram": "MZ",
+  "Nagaland": "NL",
+  "Odisha": "OR",
+  "Puducherry": "PY",
+  "Punjab": "PB",
+  "Rajasthan": "RJ",
+  "Sikkim": "SK",
+  "Tamil Nadu": "TN",
+  "Telangana": "TG",
+  "Tripura": "TR",
+  "Uttar Pradesh": "UP",
+  "Uttarakhand": "UT",
+  "West Bengal": "WB"
+};
 
 export default function CheckoutPage() {
   const { items, cartTotal, clearCart } = useCart();
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
+  const [isLocating, setIsLocating] = useState(false);
 
   // Form states
   const [address, setAddress] = useState({
     name: '', mobile: '', email: '', pin: '', street: '', city: '', state: ''
   });
+  
+  useEffect(() => {
+    if ('geolocation' in navigator && step === 1) {
+      setIsLocating(true);
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.address) {
+              const city = data.address.city || data.address.town || data.address.village || data.address.state_district || '';
+              const rawState = data.address.state || '';
+              const stateCode = stateMapping[rawState] || '';
+              const postcode = data.address.postcode || '';
+              
+              setAddress(prev => ({
+                ...prev,
+                city: prev.city || city,
+                state: prev.state || stateCode,
+                pin: prev.pin || postcode
+              }));
+            }
+          }
+        } catch (error) {
+          console.error("Geolocation fetch error:", error);
+        } finally {
+          setIsLocating(false);
+        }
+      }, () => {
+        setIsLocating(false);
+      });
+    }
+  }, [step]);
   const [delivery, setDelivery] = useState('standard');
   const [payment, setPayment] = useState('upi');
 
@@ -78,9 +153,12 @@ export default function CheckoutPage() {
               {/* STEP 1: Address */}
               {step === 1 && (
                 <div className="animate-in fade-in">
-                  <div className="flex items-center gap-3 mb-6">
-                    <MapPin className="w-5 h-5 text-zivara-black" />
-                    <h2 className="font-playfair text-2xl font-bold text-zivara-black">Shipping Address</h2>
+                  <div className="flex justify-between items-center mb-6">
+                    <div className="flex items-center gap-3">
+                      <MapPin className="w-5 h-5 text-zivara-black" />
+                      <h2 className="font-playfair text-2xl font-bold text-zivara-black">Shipping Address</h2>
+                    </div>
+                    {isLocating && <span className="font-poppins text-xs text-gray-500 flex items-center gap-1"><LocateFixed className="w-3 h-3 animate-spin"/> Locating...</span>}
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">

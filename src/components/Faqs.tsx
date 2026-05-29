@@ -9,13 +9,23 @@ export default function Faqs() {
   return (
     <section className="py-24 bg-zivara-beige">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <h2 className="font-playfair text-4xl font-bold text-zivara-black mb-4">Frequently Asked Questions</h2>
-        </div>
+        </motion.div>
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <div 
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, delay: Math.min(index * 0.1, 0.4) }}
               key={index} 
               className="bg-white border border-gray-100 shadow-sm"
             >
@@ -46,7 +56,7 @@ export default function Faqs() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

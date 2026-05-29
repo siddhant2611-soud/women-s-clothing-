@@ -1,4 +1,4 @@
-import { X, Heart, ShoppingBag } from 'lucide-react';
+import { X, Heart, ShoppingBag, Share2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
@@ -6,6 +6,27 @@ import { useCart } from '../context/CartContext';
 export default function WishlistDrawer() {
   const { wishlistItems, isWishlistOpen, setIsWishlistOpen, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Wishlist at Zivara',
+          url: url
+        });
+      } catch (error) {
+        console.error("Error sharing", error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        alert("Wishlist link copied to clipboard!");
+      } catch (err) {
+        console.error("Failed to copy", err);
+      }
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -29,12 +50,23 @@ export default function WishlistDrawer() {
               <h2 className="font-playfair font-bold text-xl text-zivara-black flex items-center gap-2">
                 <Heart className="w-5 h-5" /> Wishlist
               </h2>
-              <button 
-                onClick={() => setIsWishlistOpen(false)}
-                className="p-2 text-gray-500 hover:text-zivara-black hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {wishlistItems.length > 0 && (
+                  <button 
+                    onClick={handleShare}
+                    className="p-2 text-gray-500 hover:text-zivara-black hover:bg-gray-100 rounded-full transition-colors"
+                    title="Share Wishlist"
+                  >
+                    <Share2 className="w-5 h-5" />
+                  </button>
+                )}
+                <button 
+                  onClick={() => setIsWishlistOpen(false)}
+                  className="p-2 text-gray-500 hover:text-zivara-black hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6">

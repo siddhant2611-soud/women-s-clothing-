@@ -1,9 +1,10 @@
-import { X, ShoppingBag, Check, Heart } from 'lucide-react';
+import { X, ShoppingBag, Check, Heart, ZoomIn, ZoomOut, Share2, Star, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Product } from '../types';
 import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import SizeGuideModal from './SizeGuideModal';
 
 interface ProductModalProps {
   product: Product | null;
@@ -16,7 +17,17 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [errorLine, setErrorLine] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState<string>('');
-  const { addToCart } = useCart();
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+  const [isWritingReview, setIsWritingReview] = useState(false);
+  const [reviewName, setReviewName] = useState('');
+  const [reviewText, setReviewText] = useState('');
+  const [notifyEmail, setNotifyEmail] = useState('');
+  const [isNotified, setIsNotified] = useState(false);
+  const [localReviews, setLocalReviews] = useState<{name: string, text: string, date: string}[]>([
+    { name: 'Priya M.', text: 'Absolutely loved the quality and fit!', date: '2 days ago' }
+  ]);
+  const { addToCart, showToast } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
   useEffect(() => {
@@ -24,6 +35,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
       setSelectedSize(null);
       setErrorLine(null);
       setAddedItems(false);
+      setZoomLevel(1);
       if (product) {
         setActiveImage(product.imageUrl);
       }
@@ -44,6 +56,55 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
       setAddedItems(false);
       onClose();
     }, 2000);
+  };
+
+  const handleNotifySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (notifyEmail) {
+      setIsNotified(true);
+      setNotifyEmail('');
+      setTimeout(() => {
+        setIsNotified(false);
+      }, 3000);
+    }
+  };
+
+  const handleZoomIn = () => setZoomLevel((prev) => Math.min(prev + 0.5, 3));
+  const handleZoomOut = () => setZoomLevel((prev) => Math.max(prev - 0.5, 1));
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewName.trim() || !reviewText.trim()) return;
+    
+    setLocalReviews([{
+      name: reviewName,
+      text: reviewText,
+      date: 'Just now'
+    }, ...localReviews]);
+    setReviewName('');
+    setReviewText('');
+    setIsWritingReview(false);
+  };
+
+  const handleShare = async () => {
+    if (!product) return;
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `Zivara - ${product.name}`,
+          text: `Check out ${product.name} on Zivara!`,
+          url: url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        showToast('Link copied to clipboard!');
+      }
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        showToast('Failed to share');
+      }
+    }
   };
 
   return (
@@ -72,13 +133,25 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
             </button>
 
             {/* Image Section */}
-            <div className="w-full md:w-1/2 relative bg-gray-100 min-h-[50vh] md:min-h-[500px] flex flex-col">
-              <div className="flex-1 relative">
-                <img
+            <div className="w-full md:w-1/2 relative bg-gray-100 min-h-[50vh] md:min-h-[500px] flex flex-col group">
+              <div className="flex-1 relative overflow-hidden">
+                <motion.img
+                  animate={{ scale: zoomLevel }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   src={activeImage || product.imageUrl}
                   alt={product.name}
-                  className="w-full h-full object-cover object-top absolute inset-0 md:relative"
+                  className="w-full h-full object-cover object-top absolute inset-0 md:relative origin-top"
                 />
+                
+                {/* Zoom Controls */}
+                <div className="absolute top-4 left-4 flex flex-col gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={handleZoomIn} className="p-2 bg-white/80 rounded-full text-zivara-black hover:bg-white shadow-sm transition-colors">
+                    <ZoomIn className="w-5 h-5" />
+                  </button>
+                  <button onClick={handleZoomOut} disabled={zoomLevel === 1} className="p-2 bg-white/80 rounded-full text-zivara-black hover:bg-white shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    <ZoomOut className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
               
               {/* Thumbnails */}
@@ -87,7 +160,10 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                   {product.gallery.map((img, idx) => (
                     <button
                       key={idx}
-                      onClick={() => setActiveImage(img)}
+                      onClick={() => {
+                        setActiveImage(img);
+                        setZoomLevel(1);
+                      }}
                       className={`w-14 h-14 md:w-20 md:h-20 shrink-0 border-2 transition-all overflow-hidden rounded-md ${
                         activeImage === img ? 'border-zivara-black scale-105 shadow-md' : 'border-transparent opacity-70 hover:opacity-100'
                       }`}
@@ -108,17 +184,82 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
               </div>
               <div className="flex justify-between items-start mb-3 gap-4">
                 <h2 className="font-playfair text-3xl font-bold text-zivara-black">{product.name}</h2>
-                <button 
-                  onClick={() => toggleWishlist(product.id)}
-                  className="p-2 -mt-2 -mr-2 text-gray-400 hover:text-zivara-pink transition-colors shrink-0"
-                >
-                  <Heart className={`w-6 h-6 ${isInWishlist(product.id) ? 'fill-zivara-pink text-zivara-pink' : ''}`} />
-                </button>
+                <div className="flex gap-2 shrink-0 -mt-2 -mr-2">
+                  <button 
+                    onClick={handleShare}
+                    className="p-2 text-gray-400 hover:text-black transition-colors"
+                  >
+                    <Share2 className="w-6 h-6" />
+                  </button>
+                  <button 
+                    onClick={() => toggleWishlist(product.id)}
+                    className="p-2 text-gray-400 hover:text-zivara-pink transition-colors"
+                  >
+                    <Heart className={`w-6 h-6 ${isInWishlist(product.id) ? 'fill-zivara-pink text-zivara-pink' : ''}`} />
+                  </button>
+                </div>
               </div>
               <p className="font-poppins text-2xl font-semibold text-zivara-black mb-6">₹{product.price}</p>
               
               <div className="font-poppins text-sm text-gray-600 mb-8 leading-relaxed">
                 {product.description}
+              </div>
+
+              {/* Star Rating and Reviews Summary */}
+              <div className="mb-6 pb-6 border-b border-gray-100">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1 text-zivara-gold">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-current" />
+                      ))}
+                    </div>
+                    <span className="font-poppins text-sm font-semibold text-zivara-black">4.8 / 5</span>
+                    <span className="font-poppins text-sm text-gray-500 hover:text-zivara-black cursor-pointer underline underline-offset-2 transition-colors">({123 + localReviews.length} Reviews)</span>
+                  </div>
+                  <button 
+                    onClick={() => setIsWritingReview(!isWritingReview)}
+                    className="font-poppins text-xs font-semibold text-zivara-black underline underline-offset-2"
+                  >
+                    {isWritingReview ? 'Cancel Review' : 'Write a Review'}
+                  </button>
+                </div>
+
+                {isWritingReview && (
+                  <form onSubmit={handleReviewSubmit} className="mb-4 bg-gray-50 p-4 rounded-lg flex flex-col gap-3">
+                    <input 
+                      type="text" 
+                      placeholder="Your Name" 
+                      value={reviewName}
+                      onChange={(e) => setReviewName(e.target.value)}
+                      required
+                      className="w-full bg-white border border-gray-200 rounded-md font-poppins text-sm px-3 py-2 text-zivara-black focus:outline-none focus:border-zivara-black"
+                    />
+                    <textarea 
+                      placeholder="Write your review here..."
+                      value={reviewText}
+                      onChange={(e) => setReviewText(e.target.value)}
+                      required
+                      rows={3}
+                      className="w-full bg-white border border-gray-200 rounded-md font-poppins text-sm px-3 py-2 text-zivara-black focus:outline-none focus:border-zivara-black resize-none"
+                    />
+                    <button type="submit" className="bg-zivara-black text-white font-poppins text-sm font-medium py-2 rounded-md hover:bg-zivara-black/80 transition-colors">
+                      Submit Review
+                    </button>
+                  </form>
+                )}
+
+                <div className="space-y-3">
+                  {localReviews.map((review, idx) => (
+                    <div key={idx} className="bg-gray-50 p-4 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-poppins font-medium text-sm text-zivara-black overflow-hidden text-ellipsis whitespace-nowrap mr-2">"{review.text}"</span>
+                        <span className="font-poppins text-xs text-gray-500 shrink-0">{review.date}</span>
+                      </div>
+                      <p className="font-poppins text-xs text-gray-600">- {review.name}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {product.color && (
@@ -137,6 +278,12 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                 <div className="mb-8">
                   <div className="flex justify-between items-center mb-3">
                     <p className="font-poppins text-sm font-semibold text-zivara-black">Select Size</p>
+                    <button 
+                      onClick={() => setIsSizeGuideOpen(true)}
+                      className="font-poppins text-sm text-gray-500 hover:text-zivara-black underline underline-offset-2 transition-colors"
+                    >
+                      Size Guide
+                    </button>
                   </div>
                   <div className="flex gap-3 mb-2">
                     {product.sizes.map((size) => (
@@ -163,30 +310,68 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
               )}
 
               <div className="mt-auto pt-6 flex flex-col gap-3">
-                <button
-                  onClick={handleBuyNow}
-                  className={`w-full py-4 font-poppins font-medium flex items-center justify-center gap-2 transition-all ${
-                    addedItems
-                      ? 'bg-zivara-gold text-white'
-                      : 'bg-zivara-black text-white hover:bg-zivara-black/80'
-                  }`}
-                >
-                  {addedItems ? (
-                    <>
-                      <Check className="w-5 h-5" /> Added to Bag
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingBag className="w-5 h-5" /> Buy Now
-                    </>
-                  )}
-                </button>
-                <p className="text-center font-poppins text-xs text-gray-500 mt-2">
-                  Free shipping on orders above ₹1,999
-                </p>
+                {product.inStock === false ? (
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                    <p className="font-poppins text-sm font-medium text-red-500 mb-3 flex items-center gap-2">
+                       This item is currently out of stock.
+                    </p>
+                    {isNotified ? (
+                      <p className="text-sm font-poppins text-green-600 font-medium flex items-center gap-2">
+                        <Check className="w-5 h-5" /> We will notify you!
+                      </p>
+                    ) : (
+                      <form onSubmit={handleNotifySubmit} className="flex flex-col gap-3">
+                        <p className="text-xs font-poppins text-gray-500">
+                          Enter your email to receive a notification when it's back.
+                        </p>
+                        <div className="flex gap-2">
+                          <input 
+                            type="email"
+                            required
+                            placeholder="Email address"
+                            className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm font-poppins focus:outline-none focus:border-zivara-black"
+                            value={notifyEmail}
+                            onChange={(e) => setNotifyEmail(e.target.value)}
+                          />
+                          <button 
+                            type="submit"
+                            className="bg-zivara-black text-white px-4 py-2 rounded-md hover:bg-black/80 transition-colors flex items-center gap-2"
+                          >
+                            <Bell className="w-4 h-4" /> Notify Me
+                          </button>
+                        </div>
+                      </form>
+                    )}
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleBuyNow}
+                      className={`w-full py-4 font-poppins font-medium flex items-center justify-center gap-2 transition-all ${
+                        addedItems
+                          ? 'bg-zivara-gold text-white'
+                          : 'bg-zivara-black text-white hover:bg-zivara-black/80'
+                      }`}
+                    >
+                      {addedItems ? (
+                        <>
+                          <Check className="w-5 h-5" /> Added to Bag
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingBag className="w-5 h-5" /> Buy Now
+                        </>
+                      )}
+                    </button>
+                    <p className="text-center font-poppins text-xs text-gray-500 mt-2">
+                      Free shipping on orders above ₹1,999
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
+          <SizeGuideModal isOpen={isSizeGuideOpen} onClose={() => setIsSizeGuideOpen(false)} />
         </>
       )}
     </AnimatePresence>

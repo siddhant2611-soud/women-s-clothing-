@@ -69,11 +69,6 @@ export default function Hero() {
               className="w-full h-full object-cover object-top"
             />
           </div>
-          {/* Accent decoration */}
-          <div className="absolute -bottom-6 -left-6 bg-zivara-white p-6 shadow-xl rounded-lg">
-            <p className="font-playfair text-3xl font-bold text-zivara-gold">100%</p>
-            <p className="font-poppins text-xs font-semibold uppercase tracking-wider">Premium Fabric</p>
-          </div>
         </motion.div>
       </div>
     </section>

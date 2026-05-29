@@ -10,6 +10,7 @@ export interface Product {
   gallery?: string[];
   category: string;
   badge?: string;
+  inStock?: boolean;
 }
 
 export interface Testimonial {

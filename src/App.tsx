@@ -20,6 +20,7 @@ import CartDrawer from './components/CartDrawer';
 import WishlistDrawer from './components/WishlistDrawer';
 import ProfileDrawer from './components/ProfileDrawer';
 import WhatsAppFAB from './components/WhatsAppFAB';
+import ScrollToTopFAB from './components/ScrollToTopFAB';
 import AdminDashboard from './pages/AdminDashboard';
 import TrackOrderPage from './pages/TrackOrderPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -55,6 +56,7 @@ function MainLayout() {
       <WishlistDrawer />
       <ProfileDrawer />
       <WhatsAppFAB />
+      <ScrollToTopFAB />
       <main>
         <Outlet />
       </main>

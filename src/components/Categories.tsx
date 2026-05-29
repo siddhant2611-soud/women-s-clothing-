@@ -8,7 +8,13 @@ export default function Categories() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-16">
           {/* New Arrivals Left Panel */}
-          <div className="w-full lg:w-1/3 flex flex-col justify-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="w-full lg:w-1/3 flex flex-col justify-center"
+          >
             <h2 className="font-playfair text-4xl font-bold text-zivara-black mb-6">This Week's<br/>Trending Styles</h2>
             <div className="flex flex-col gap-4 mb-8">
               {newArrivalsCategories.map((cat, idx) => (
@@ -36,10 +42,16 @@ export default function Categories() {
                 View All Arrivals
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Categories Grid */}
-          <div className="w-full lg:w-2/3">
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="w-full lg:w-2/3"
+          >
             <div className="mb-6 flex justify-between items-end">
               <h3 className="font-playfair font-bold text-2xl text-zivara-black">Shop by Category</h3>
             </div>
@@ -59,7 +71,7 @@ export default function Categories() {
                 </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

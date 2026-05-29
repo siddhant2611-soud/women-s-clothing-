@@ -1,4 +1,5 @@
 import { CheckCircle2 } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function About() {
   const values = [
@@ -15,19 +16,31 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center gap-16">
           
-          <div className="flex-1 relative">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="flex-1 relative"
+          >
             <div className="aspect-[4/5] w-full max-w-md mx-auto">
               <img 
-                src="https://images.unsplash.com/photo-1616053896570-5b5bfb72a0c6?q=80&w=800&auto=format&fit=crop" 
+                src="/images/about_section_img_1780041255374.png" 
                 alt="Zivara Collection Quality Detail" 
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-zivara-beige -z-10 rounded-full" />
             <div className="absolute -top-8 -left-8 w-32 h-32 bg-zivara-pink/20 -z-10 rounded-full blur-2xl" />
-          </div>
+          </motion.div>
 
-          <div className="flex-1">
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex-1"
+          >
             <p className="font-poppins text-sm font-semibold tracking-widest text-zivara-gold uppercase mb-2">About Us</p>
             <h2 className="font-playfair text-4xl md:text-5xl font-bold text-zivara-black mb-6">
               Modern Fashion with <br /> Traditional Roots
@@ -48,7 +61,7 @@ export default function About() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
           
         </div>
       </div>

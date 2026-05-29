@@ -16,7 +16,8 @@ export const products: Product[] = [
       '/images/pink_floral_kurti_3_1780032708610.png'
     ],
     category: 'Kurtis',
-    badge: 'Trending'
+    badge: 'Trending',
+    inStock: false
   },
   {
     id: '2',
@@ -26,11 +27,11 @@ export const products: Product[] = [
     fabric: 'Rayon',
     color: 'Beige',
     description: 'Elegant Indo-western co-ord set for brunches and casual outings.',
-    imageUrl: 'https://images.unsplash.com/photo-1610444317135-24fd53f2c5eb?q=80&w=800&auto=format&fit=crop',
+    imageUrl: '/images/beige_coord_1_1780039903892.png',
     gallery: [
-      'https://images.unsplash.com/photo-1610444317135-24fd53f2c5eb?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1551806235-a05ff36ee498?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1434389678369-182f4553229b?q=80&w=800&auto=format&fit=crop'
+      '/images/beige_coord_1_1780039903892.png',
+      '/images/beige_coord_2_1780039922809.png',
+      '/images/beige_coord_3_1780039940858.png'
     ],
     category: 'Co-ord Sets'
   },
@@ -41,11 +42,11 @@ export const products: Product[] = [
     fabric: 'Georgette',
     color: 'Wine',
     description: 'Lightweight festive saree with embroidered border.',
-    imageUrl: 'https://images.unsplash.com/photo-1615886753866-79396abc446e?q=80&w=800&auto=format&fit=crop',
+    imageUrl: '/images/wine_saree_1_1780040161390.png',
     gallery: [
-      'https://images.unsplash.com/photo-1615886753866-79396abc446e?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583391733915-181519d1469e?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=800&auto=format&fit=crop'
+      '/images/wine_saree_1_1780040161390.png',
+      '/images/wine_saree_2_1780040180994.png',
+      '/images/wine_saree_3_1780040205205.png'
     ],
     category: 'Sarees',
     badge: 'New Arrival'
@@ -57,11 +58,11 @@ export const products: Product[] = [
     sizes: ['M', 'L', 'XL'],
     fabric: 'Chanderi',
     description: 'Perfect ethnic outfit for weddings and festive occasions.',
-    imageUrl: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
+    imageUrl: '/images/black_anarkali_1_1780039960399.png',
     gallery: [
-      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1605333550882-9ed88c006c9e?q=80&w=800&auto=format&fit=crop'
+      '/images/black_anarkali_1_1780039960399.png',
+      '/images/black_anarkali_2_1780039979843.png',
+      '/images/black_anarkali_3_1780040001187.png'
     ],
     category: 'Ethnic Sets',
     color: 'Black'
@@ -73,11 +74,11 @@ export const products: Product[] = [
     sizes: ['S', 'M', 'L'],
     fabric: 'Crepe',
     description: 'Trendy flowy dress with puff sleeves.',
-    imageUrl: 'https://images.unsplash.com/photo-1620359850117-0245237887ac?q=80&w=800&auto=format&fit=crop',
+    imageUrl: '/images/lavender_dress_1_1780040020061.png',
     gallery: [
-      'https://images.unsplash.com/photo-1620359850117-0245237887ac?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1550605963-3595b1aeb0fc?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?q=80&w=800&auto=format&fit=crop'
+      '/images/lavender_dress_1_1780040020061.png',
+      '/images/lavender_dress_2_1780040038003.png',
+      '/images/lavender_dress_3_1780040069772.png'
     ],
     category: 'Dresses',
     color: 'Lavender',
@@ -90,11 +91,11 @@ export const products: Product[] = [
     sizes: ['M', 'L', 'XL'],
     fabric: 'Cotton Silk',
     description: 'Elegant embroidered kurta set with matching dupatta.',
-    imageUrl: 'https://images.unsplash.com/photo-1589465885855-408990c6ca7e?q=80&w=800&auto=format&fit=crop',
+    imageUrl: '/images/white_kurta_1_1780040099925.png',
     gallery: [
-      'https://images.unsplash.com/photo-1589465885855-408990c6ca7e?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1502716113880-60b63b827eeb?q=80&w=800&auto=format&fit=crop'
+      '/images/white_kurta_1_1780040099925.png',
+      '/images/white_kurta_2_1780040119738.png',
+      '/images/white_kurta_3_1780040145121.png'
     ],
     category: 'Ethnic Sets',
     color: 'White',
