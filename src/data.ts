@@ -7,13 +7,13 @@ export const products: Product[] = [
     price: 899,
     sizes: ['S', 'M', 'L', 'XL'],
     fabric: 'Pure Cotton',
-    color: 'Sky Blue',
+    color: 'Pink',
     description: 'Soft floral printed kurti perfect for daily wear and college styling.',
-    imageUrl: 'https://images.unsplash.com/photo-1583391733958-6c5826ea1694?q=80&w=800&auto=format&fit=crop',
+    imageUrl: '/images/pink_floral_kurti_1_1780032659171.png',
     gallery: [
-      'https://images.unsplash.com/photo-1583391733958-6c5826ea1694?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1550614000-4b95d4669894?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=800&auto=format&fit=crop'
+      '/images/pink_floral_kurti_1_1780032659171.png',
+      '/images/pink_floral_kurti_2_1780032681635.png',
+      '/images/pink_floral_kurti_3_1780032708610.png'
     ],
     category: 'Kurtis',
     badge: 'Trending'

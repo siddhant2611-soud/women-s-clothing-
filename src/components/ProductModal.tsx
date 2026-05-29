@@ -43,7 +43,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
     setTimeout(() => {
       setAddedItems(false);
       onClose();
-    }, 1500);
+    }, 2000);
   };
 
   return (
@@ -57,11 +57,12 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
             onClick={onClose}
             className="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm"
           />
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-0 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full md:w-[800px] h-full md:h-auto max-h-[100vh] md:max-h-[85vh] bg-zivara-white z-50 overflow-y-auto flex flex-col md:flex-row shadow-2xl"
+            className="fixed inset-0 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full md:w-[800px] h-full md:h-auto max-h-[100vh] md:max-h-[85vh] bg-zivara-white z-[60] overflow-y-auto flex flex-col md:flex-row shadow-2xl"
           >
             <button
               onClick={onClose}
