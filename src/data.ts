@@ -90,11 +90,11 @@ export const products: Product[] = [
     sizes: ['M', 'L', 'XL'],
     fabric: 'Cotton Silk',
     description: 'Elegant embroidered kurta set with matching dupatta.',
-    imageUrl: 'https://images.unsplash.com/photo-1589465885855-408990c6ca7e?q=80&w=800&auto=format&fit=crop',
+    imageUrl: '/images/white_kurta_set_1.webp',
     gallery: [
-      'https://images.unsplash.com/photo-1589465885855-408990c6ca7e?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1502716113880-60b63b827eeb?q=80&w=800&auto=format&fit=crop'
+      '/images/white_kurta_set_1.webp',
+      '/images/white_kurta_set_2.webp',
+      '/images/white_kurta_set_3.webp'
     ],
     category: 'Ethnic Sets',
     color: 'White',
