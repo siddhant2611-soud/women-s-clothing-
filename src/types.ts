@@ -2,6 +2,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  originalPrice?: number;
   sizes?: string[];
   fabric: string;
   color?: string;
@@ -11,6 +12,7 @@ export interface Product {
   category: string;
   badge?: string;
   inStock?: boolean;
+  flashSaleEndDate?: string;
 }
 
 export interface Testimonial {

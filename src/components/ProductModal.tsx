@@ -24,6 +24,8 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
   const [reviewText, setReviewText] = useState('');
   const [notifyEmail, setNotifyEmail] = useState('');
   const [isNotified, setIsNotified] = useState(false);
+  const [isMagnifying, setIsMagnifying] = useState(false);
+  const [magnifyPos, setMagnifyPos] = useState({ x: 50, y: 50 });
   const [localReviews, setLocalReviews] = useState<{name: string, text: string, date: string}[]>([
     { name: 'Priya M.', text: 'Absolutely loved the quality and fit!', date: '2 days ago' }
   ]);
@@ -86,6 +88,13 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
     setIsWritingReview(false);
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setMagnifyPos({ x, y });
+  };
+
   const handleShare = async () => {
     if (!product) return;
     const url = window.location.href;
@@ -134,13 +143,21 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
 
             {/* Image Section */}
             <div className="w-full md:w-1/2 relative bg-gray-100 min-h-[50vh] md:min-h-[500px] flex flex-col group">
-              <div className="flex-1 relative overflow-hidden">
+              <div 
+                className="flex-1 relative overflow-hidden"
+                onMouseEnter={() => setIsMagnifying(true)}
+                onMouseLeave={() => setIsMagnifying(false)}
+                onMouseMove={handleMouseMove}
+              >
                 <motion.img
-                  animate={{ scale: zoomLevel }}
+                  animate={{ scale: isMagnifying ? 2.5 : zoomLevel }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  style={{ 
+                    transformOrigin: isMagnifying ? `${magnifyPos.x}% ${magnifyPos.y}%` : '50% 0%' 
+                  }}
                   src={activeImage || product.imageUrl}
                   alt={product.name}
-                  className="w-full h-full object-cover object-top absolute inset-0 md:relative origin-top"
+                  className="w-full h-full object-cover object-top absolute inset-0 md:relative pointer-events-none"
                 />
                 
                 {/* Zoom Controls */}
@@ -199,7 +216,12 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                   </button>
                 </div>
               </div>
-              <p className="font-poppins text-2xl font-semibold text-zivara-black mb-6">₹{product.price}</p>
+              <div className="flex items-end gap-3 mb-6">
+                <p className="font-poppins text-2xl font-semibold text-zivara-black">₹{product.price}</p>
+                {product.originalPrice && (
+                  <p className="font-poppins text-lg text-gray-500 line-through mb-0.5">₹{product.originalPrice}</p>
+                )}
+              </div>
               
               <div className="font-poppins text-sm text-gray-600 mb-8 leading-relaxed">
                 {product.description}

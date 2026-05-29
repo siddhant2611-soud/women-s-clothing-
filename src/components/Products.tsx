@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import ProductModal from './ProductModal';
 import { Product } from '../types';
 import { useWishlist } from '../context/WishlistContext';
+import CountdownTimer from './CountdownTimer';
 
 export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -214,7 +215,7 @@ export default function Products() {
                     Out of Stock
                   </div>
                 ) : product.badge && (
-                  <div className={`absolute top-4 left-4 text-xs font-poppins font-medium uppercase tracking-wider py-1 px-3 ${product.badge === 'Bestseller' ? 'bg-zivara-black text-white' : 'bg-zivara-pink text-white'}`}>
+                  <div className={`absolute top-4 left-4 text-xs font-poppins font-medium uppercase tracking-wider py-1 px-3 ${product.badge === 'Bestseller' ? 'bg-zivara-black text-white' : product.badge.includes('50%') || product.badge.includes('Off') ? 'bg-red-600 text-white' : 'bg-zivara-pink text-white'}`}>
                     {product.badge}
                   </div>
                 )}
@@ -245,6 +246,10 @@ export default function Products() {
                 >
                   <ArrowLeftRight className={`w-4 h-4 ${compareList.find(p => p.id === product.id) ? 'text-zivara-gold' : ''}`} />
                 </button>
+
+                {product.flashSaleEndDate && (
+                  <CountdownTimer endDate={product.flashSaleEndDate} />
+                )}
                 
                 <button 
                   onClick={() => setSelectedProduct(product)}
@@ -261,7 +266,12 @@ export default function Products() {
                 <p className="font-poppins text-xs text-gray-500 mb-1">{product.category}</p>
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="font-playfair font-bold text-lg text-zivara-black group-hover:text-zivara-gold transition-colors">{product.name}</h3>
-                  <span className="font-poppins font-semibold text-zivara-black text-lg">₹{product.price}</span>
+                  <div className="flex flex-col items-end">
+                    <span className="font-poppins font-semibold text-zivara-black text-lg text-right">₹{product.price}</span>
+                    {product.originalPrice && (
+                      <span className="font-poppins text-xs text-gray-500 line-through text-right">₹{product.originalPrice}</span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-1 text-zivara-gold mb-2">
                   <Star className="w-3.5 h-3.5 fill-current" />

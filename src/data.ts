@@ -22,7 +22,8 @@ export const products: Product[] = [
   {
     id: '2',
     name: 'Beige Co-ord Set',
-    price: 1799,
+    price: 1169,
+    originalPrice: 1799,
     sizes: ['S', 'M', 'L'],
     fabric: 'Rayon',
     color: 'Beige',
@@ -33,7 +34,9 @@ export const products: Product[] = [
       '/images/beige_coord_2_1780039922809.png',
       '/images/beige_coord_3_1780039940858.png'
     ],
-    category: 'Co-ord Sets'
+    category: 'Co-ord Sets',
+    badge: '35% Off',
+    flashSaleEndDate: '2026-05-30T23:59:59Z'
   },
   {
     id: '3',
@@ -54,7 +57,8 @@ export const products: Product[] = [
   {
     id: '4',
     name: 'Black Anarkali Suit Set',
-    price: 2199,
+    price: 1319,
+    originalPrice: 2199,
     sizes: ['M', 'L', 'XL'],
     fabric: 'Chanderi',
     description: 'Perfect ethnic outfit for weddings and festive occasions.',
@@ -65,12 +69,15 @@ export const products: Product[] = [
       '/images/black_anarkali_3_1780040001187.png'
     ],
     category: 'Ethnic Sets',
-    color: 'Black'
+    color: 'Black',
+    badge: '40% Off',
+    flashSaleEndDate: '2026-05-30T23:59:59Z'
   },
   {
     id: '5',
     name: 'Lavender Printed Dress',
-    price: 1299,
+    price: 909,
+    originalPrice: 1299,
     sizes: ['S', 'M', 'L'],
     fabric: 'Crepe',
     description: 'Trendy flowy dress with puff sleeves.',
@@ -82,7 +89,8 @@ export const products: Product[] = [
     ],
     category: 'Dresses',
     color: 'Lavender',
-    badge: 'Trending'
+    badge: '30% Off',
+    flashSaleEndDate: '2026-05-30T23:59:59Z'
   },
   {
     id: '6',

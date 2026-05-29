@@ -1,4 +1,5 @@
-import { Facebook, Instagram, Phone, Mail, MapPin } from 'lucide-react';
+import { Facebook, Instagram as InstagramIcon, Phone, Mail, MapPin } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function Footer() {
   return (
@@ -7,23 +8,33 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           
           {/* Brand Col */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6 }}
+          >
             <h2 className="font-playfair font-bold text-2xl uppercase tracking-wide mb-6">Zivara</h2>
             <p className="font-poppins text-gray-400 text-sm mb-6 leading-relaxed">
               Elegant Indian Wear for Modern Women. Style that feels like you, blending comfort and high fashion seamlessly.
             </p>
             <div className="flex gap-4">
               <a href="#" className="w-10 h-10 bg-white/10 flex items-center justify-center hover:bg-zivara-gold transition-colors">
-                <Instagram className="w-4 h-4" />
+                <InstagramIcon className="w-4 h-4" />
               </a>
               <a href="#" className="w-10 h-10 bg-white/10 flex items-center justify-center hover:bg-zivara-gold transition-colors">
                 <Facebook className="w-4 h-4" />
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Links */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             <h3 className="font-playfair font-bold text-lg mb-6">Quick Links</h3>
             <ul className="space-y-4 font-poppins text-sm text-gray-400">
               <li><a href="#" className="hover:text-zivara-gold transition-colors">Home</a></li>
@@ -32,10 +43,15 @@ export default function Footer() {
               <li><a href="#about" className="hover:text-zivara-gold transition-colors">About Us</a></li>
               <li><a href="#contact" className="hover:text-zivara-gold transition-colors">Contact</a></li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Policies & Contact */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             <h3 className="font-playfair font-bold text-lg mb-6">Support & Info</h3>
             <ul className="space-y-4 font-poppins text-sm text-gray-400 mb-8">
               <li><a href="#" className="hover:text-zivara-gold transition-colors">Privacy Policy</a></li>
@@ -43,10 +59,15 @@ export default function Footer() {
               <li><a href="#" className="hover:text-zivara-gold transition-colors">Shipping Policy</a></li>
               <li><a href="#" className="hover:text-zivara-gold transition-colors">Return & Refund Policy</a></li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Contact Details */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
             <h3 className="font-playfair font-bold text-lg mb-6">Get in Touch</h3>
             <ul className="space-y-4 font-poppins text-sm text-gray-400">
               <li className="flex items-start gap-3">
@@ -68,12 +89,18 @@ export default function Footer() {
                 Mon – Sat: 10:00 AM – 7:00 PM
               </li>
             </ul>
-          </div>
+          </motion.div>
 
         </div>
 
         {/* Newsletter */}
-        <div className="border-t border-white/10 pt-12 pb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="border-t border-white/10 pt-12 pb-12 flex flex-col md:flex-row items-center justify-between gap-6"
+        >
           <div className="text-center md:text-left text-sm font-poppins">
             <h4 className="text-lg font-playfair font-bold mb-2">Subscribe to our Newsletter</h4>
             <p className="text-gray-400">Get updates on new collections and exclusive offers.</p>
@@ -89,7 +116,7 @@ export default function Footer() {
               Subscribe
             </button>
           </form>
-        </div>
+        </motion.div>
 
         <div className="border-t border-white/10 pt-8 text-center font-poppins text-xs text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
           <p>&copy; {new Date().getFullYear()} Zivara Fashion Studio. All rights reserved.</p>
