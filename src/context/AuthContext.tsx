@@ -5,6 +5,7 @@ interface User {
   email: string;
   phone?: string;
   address?: string;
+  loyaltyPoints?: number;
 }
 
 interface AuthContextType {
@@ -32,8 +33,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const login = (email: string, name: string = 'Guest User', phone: string = '') => {
-    // Mock login
-    const newUser = { name, email, phone };
+    // Mock login with some initial loyalty points
+    const newUser = { name, email, phone, loyaltyPoints: 250 };
     setUser(newUser);
     window.localStorage.setItem('zivara_user', JSON.stringify(newUser));
   };

@@ -55,7 +55,7 @@ export default function TrackOrderPage() {
                 <span className="absolute -left-[11px] top-1 bg-green-500 text-white w-5 h-5 rounded-full flex items-center justify-center">
                   <PackageCheck className="w-3 h-3" />
                 </span>
-                <p className="font-poppins font-medium text-zivara-black">Order Processed & Packed</p>
+                <p className="font-poppins font-medium text-zivara-black">Packed</p>
                 <p className="font-poppins text-xs text-gray-500 mt-1">May 26, 2026 - 02:15 PM</p>
               </div>
 
@@ -63,7 +63,7 @@ export default function TrackOrderPage() {
                 <span className="absolute -left-[11px] top-1 bg-zivara-gold text-white w-5 h-5 rounded-full shadow-[0_0_0_4px_white] flex items-center justify-center">
                   <Truck className="w-3 h-3" />
                 </span>
-                <p className="font-poppins font-medium text-zivara-black">In Transit - Expected Delivery Tomorrow</p>
+                <p className="font-poppins font-medium text-zivara-black">In Transit</p>
                 <p className="font-poppins text-xs text-gray-500 mt-1">May 27, 2026 - 08:45 AM • Mumbai Hub</p>
               </div>
 

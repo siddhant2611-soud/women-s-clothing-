@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, ArrowLeft, ArrowRight, ShieldCheck, MapPin, Truck, CreditCard, CheckCircle2, LocateFixed } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, ArrowRight, ShieldCheck, MapPin, Truck, CreditCard, CheckCircle2, LocateFixed, Award } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
 const stateMapping: Record<string, string> = {
@@ -45,9 +46,11 @@ const stateMapping: Record<string, string> = {
 
 export default function CheckoutPage() {
   const { items, cartTotal, clearCart } = useCart();
+  const { user, updateProfile } = useAuth();
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
   const [isLocating, setIsLocating] = useState(false);
+  const [redeemPoints, setRedeemPoints] = useState(false);
 
   // Form states
   const [address, setAddress] = useState({
@@ -92,7 +95,8 @@ export default function CheckoutPage() {
 
   const shipping = delivery === 'express' ? 150 : delivery === 'sameday' ? 300 : 0;
   const gst = Math.round(cartTotal * 0.05); // 5% GST
-  const finalTotal = cartTotal + shipping + gst;
+  const pointsDiscount = (redeemPoints && user && user.loyaltyPoints) ? user.loyaltyPoints : 0;
+  const finalTotal = Math.max(0, cartTotal + shipping + gst - pointsDiscount);
 
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,6 +105,13 @@ export default function CheckoutPage() {
       return;
     }
     
+    // Calculate new points: Add 10% of finalTotal, subtract redeemed points
+    if (user) {
+      const earnedPoints = Math.round(finalTotal * 0.1);
+      const newBalance = Math.max(0, (user.loyaltyPoints || 0) - pointsDiscount + earnedPoints);
+      updateProfile({ loyaltyPoints: newBalance });
+    }
+
     // Simulate API call for real checkout
     setTimeout(() => {
       // Clear cart and redirect
@@ -403,10 +414,47 @@ export default function CheckoutPage() {
                   <span>GST (5%)</span>
                   <span className="font-medium text-zivara-black">₹{gst}</span>
                 </div>
+                
+                {user && user.loyaltyPoints && user.loyaltyPoints > 0 ? (
+                  <div className="flex items-center justify-between mt-3 p-3 bg-zivara-beige/30 rounded border border-zivara-gold/20">
+                    <div className="flex items-center gap-2">
+                      <Award className="w-4 h-4 text-zivara-gold" />
+                      <div className="flex flex-col">
+                        <span className="text-xs font-bold text-zivara-black">Zivara Points</span>
+                        <span className="text-[10px] text-gray-500">Available: {user.loyaltyPoints}</span>
+                      </div>
+                    </div>
+                    <label className="flex flex-col items-end gap-1 cursor-pointer select-none">
+                      <div className="flex text-xs font-semibold text-zivara-gold">
+                        -₹{user.loyaltyPoints}
+                        <input 
+                          type="checkbox" 
+                          checked={redeemPoints}
+                          onChange={(e) => setRedeemPoints(e.target.checked)}
+                          className="ml-2 w-3.5 h-3.5 accent-zivara-gold rounded cursor-pointer"
+                        />
+                      </div>
+                    </label>
+                  </div>
+                ) : null}
+                
+                {redeemPoints && user?.loyaltyPoints ? (
+                  <div className="flex justify-between text-green-600 mt-2">
+                    <span>Points Redemed</span>
+                    <span className="font-medium">-₹{user.loyaltyPoints}</span>
+                  </div>
+                ) : null}
               </div>
 
               <div className="border-t border-gray-200 mt-4 pt-4 flex justify-between items-end">
-                <span className="font-poppins font-bold text-gray-800">Total Payable</span>
+                <div className="flex flex-col">
+                  <span className="font-poppins font-bold text-gray-800">Total Payable</span>
+                  {user && (
+                    <span className="text-[10px] text-gray-500 font-poppins mt-1 text-zivara-gold">
+                      +₹{Math.round(finalTotal * 0.1)} points earned
+                    </span>
+                  )}
+                </div>
                 <span className="font-playfair font-bold text-2xl text-zivara-black">₹{finalTotal}</span>
               </div>
               

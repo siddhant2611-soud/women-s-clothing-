@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, LogOut, Package, MapPin, Edit2, Truck, Search } from 'lucide-react';
+import { X, User, LogOut, Package, MapPin, Edit2, Truck, Search, Award, CheckCircle, PackageCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
 
@@ -73,14 +73,22 @@ export default function ProfileDrawer() {
     
     // Mock tracking status
     const statuses = [
-      { status: 'Order Processing', step: 1 }, 
-      { status: 'Shipped', step: 2 }, 
-      { status: 'Out for Delivery', step: 3 }, 
+      { status: 'Order Placed', step: 1 }, 
+      { status: 'Packed', step: 2 }, 
+      { status: 'In Transit', step: 3 }, 
       { status: 'Delivered', step: 4 }
     ];
     const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
     setTrackingResult(randomStatus);
   };
+
+  const getLoyaltyTier = (points: number = 0) => {
+    if (points >= 2000) return { name: 'Gold Tier', color: 'bg-yellow-100/50 text-yellow-700 border-yellow-200' };
+    if (points >= 1000) return { name: 'Silver Tier', color: 'bg-slate-100 text-slate-600 border-slate-200' };
+    return { name: 'Bronze Tier', color: 'bg-amber-100/50 text-amber-800 border-amber-200' };
+  };
+
+  const loyaltyTier = getLoyaltyTier(user?.loyaltyPoints);
 
   return (
     <AnimatePresence>
@@ -201,7 +209,7 @@ export default function ProfileDrawer() {
                           />
                         </div>
                         <div>
-                          <label className="block font-poppins text-xs font-semibold text-gray-700 mb-1">Delivery Address</label>
+                          <label className="block font-poppins text-xs font-semibold text-gray-700 mb-1">Primary Address</label>
                           <textarea 
                             value={editForm.address}
                             onChange={(e) => setEditForm({...editForm, address: e.target.value})}
@@ -241,6 +249,22 @@ export default function ProfileDrawer() {
 
                   {!isEditing && (
                     <>
+                      <div className="bg-zivara-beige/30 border border-zivara-gold/20 p-5 rounded-lg text-center mb-6 relative overflow-hidden">
+                        <div className={`absolute top-0 right-0 px-3 py-1 font-poppins text-[10px] font-bold uppercase tracking-widest border-b border-l rounded-bl-lg ${loyaltyTier.color}`}>
+                          {loyaltyTier.name}
+                        </div>
+                        <div className="w-10 h-10 bg-zivara-gold/10 rounded-full flex items-center justify-center mx-auto mb-2 mt-2">
+                          <Award className="w-5 h-5 text-zivara-gold" />
+                        </div>
+                        <h4 className="font-poppins text-sm text-gray-600 mb-1">Zivara Loyalty Points</h4>
+                        <div className="font-playfair font-bold text-3xl text-zivara-black mb-2">
+                          {user.loyaltyPoints || 0}
+                        </div>
+                        <p className="font-poppins text-xs text-gray-500 max-w-[250px] mx-auto">
+                          Earn points on every purchase. Redeem them for discounts on your next order!
+                        </p>
+                      </div>
+
                       <div className="border-t border-gray-100 pt-6">
                         <strong className="block font-playfair font-bold text-lg mb-4 text-zivara-black">Account Details</strong>
                         <div className="space-y-4 font-poppins text-sm text-gray-600">
@@ -251,7 +275,10 @@ export default function ProfileDrawer() {
                               {user.address ? (
                                 <p className="leading-relaxed">{user.address}</p>
                               ) : (
-                                <p className="text-gray-400 italic">No address provided</p>
+                                <div>
+                                  <p className="text-gray-400 italic mb-1">No address provided</p>
+                                  <button onClick={startEdit} className="text-zivara-gold font-medium hover:text-black transition-colors">Add Address</button>
+                                </div>
                               )}
                             </div>
                           </div>
@@ -354,20 +381,30 @@ export default function ProfileDrawer() {
                                     </div>
                                     <div className="flex justify-between items-center relative">
                                       <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 -z-10 -translate-y-1/2" />
-                                      {[1, 2, 3, 4].map((step) => (
-                                        <div 
-                                          key={step}
-                                          className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                                            step <= trackingResult.step ? 'bg-zivara-black text-white' : 'bg-gray-200'
-                                          }`}
-                                        />
-                                      ))}
+                                      {[
+                                        { s: 1, icon: CheckCircle }, 
+                                        { s: 2, icon: PackageCheck }, 
+                                        { s: 3, icon: Truck }, 
+                                        { s: 4, icon: MapPin }
+                                      ].map((stepObj) => {
+                                        const IconComponent = stepObj.icon;
+                                        return (
+                                          <div 
+                                            key={stepObj.s}
+                                            className={`w-6 h-6 rounded-full flex items-center justify-center z-10 transition-colors duration-500 ${
+                                              stepObj.s <= trackingResult.step ? 'bg-zivara-gold text-white' : 'bg-gray-200 text-gray-500'
+                                            }`}
+                                          >
+                                            <IconComponent className="w-3.5 h-3.5" />
+                                          </div>
+                                        );
+                                      })}
                                     </div>
                                     <div className="flex justify-between mt-2 text-[10px] font-poppins text-gray-500">
-                                      <span className="text-center w-12 -ml-4">Ordered</span>
-                                      <span className="text-center w-12">Shipped</span>
-                                      <span className="text-center w-12">Out for<br/>Delivery</span>
-                                      <span className="text-center w-12 -mr-4">Delivered</span>
+                                      <span className="text-center w-12 -ml-2">Placed</span>
+                                      <span className="text-center w-12">Packed</span>
+                                      <span className="text-center w-12">Transit</span>
+                                      <span className="text-center w-12 -mr-2">Delivered</span>
                                     </div>
                                   </div>
                                 )}
